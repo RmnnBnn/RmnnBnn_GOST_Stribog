@@ -128,9 +128,9 @@
         public int outLen = 0;
         public Stribog(int outrutLenght)
         {
-            if(outrutLenght == 512)
+            if (outrutLenght == 512)
             {
-                for(int i = 0; i < 64; i++)
+                for (int i = 0; i < 64; i++)
                 {
                     iv[i] = 0x00;
                     N[i] = 0x00;
@@ -138,7 +138,7 @@
                 }
                 outLen = 512;
             }
-            if(outrutLenght == 256)
+            if (outrutLenght == 256)
             {
                 for (int i = 0; i < 64; i++)
                 {
@@ -152,10 +152,24 @@
         private byte[] Xor(byte[] a, byte[] b)
         {
             byte[] c = new byte[64];
-            for(int i = 0; i < 64; i++)
+            for (int i = 0; i < 64; i++)
                 c[i] = (byte)(a[i] ^ b[i]);
             return c;
         }
-
+        private byte[] Modulo512(byte[] a, byte[] b)
+        {
+            byte[] temp = new byte[64];
+            int i = 0, t = 0;
+            byte[] tempA = new byte[64];
+            byte[] tempB = new byte[64];
+            Array.Copy(a, 0, tempA, 64 - a.Length, a.Length);
+            Array.Copy(b, 0, tempB, 64 - b.Length, b.Length);
+            for (i = 63; i >= 0; i--)
+            {
+                t = tempA[i] + tempB[i] + (t >> 8);
+                temp[i] = (byte)(t & 0xFF);
+            }
+            return temp;
+        }
     }
 }
