@@ -178,5 +178,12 @@
                 result[i] = Sbox[state[i]];
             return result;
         }
+        private byte[] P(byte[] state)
+        {
+            byte[] result = new byte[64];
+            for (int i = 0; i < 64; i++)
+                result[i] = state[Tau[i]];
+            return result;
+        }
     }
 }
