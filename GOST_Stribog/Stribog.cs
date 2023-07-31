@@ -216,5 +216,29 @@ namespace GOST_Stribog
             K = L(K);
             return K;
         }
+        private byte[] E(byte[] K, byte[] m)
+        {
+            byte[] state = Xor(K, m);
+            for (int i = 0; i < 64; i++)
+            {
+                state = S(state);
+                state = P(state);
+                state = L(state);
+                K = KeySchedule(K, i);
+                state = Xor(state, K);
+            }
+            return state;
+        }
+        private byte[] G_n(byte[] N, byte[] h, byte[] m)
+        {
+            byte[] K = Xor(N, h);
+            K = S(K);
+            K = P(K);
+            K = L(K);
+            byte[] t = E(K, m);
+            t = Xor(t, h);
+            byte[] newh = Xor(t, m);
+            return newh;
+        }
     }
 }
