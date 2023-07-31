@@ -189,7 +189,7 @@ namespace GOST_Stribog
         }
         private byte[] L(byte[] state)
         {
-            byte[] result = new byte[64];
+            byte[] result = new byte[64];            
             for (int i = 0; i < 8; i++)
             {
                 ulong t = 0;
@@ -197,14 +197,16 @@ namespace GOST_Stribog
                 Array.Copy(state, i * 8, tempArray, 0, 8);
                 tempArray = tempArray.Reverse().ToArray();
                 BitArray tempBits1 = new BitArray(tempArray);
-                bool[] tempBits = new bool[64];
+                bool[] tempBits=new bool[64];
                 tempBits1.CopyTo(tempBits, 0);
-                tempBits = tempBits.Reverse().ToArray();
+                tempBits=tempBits.Reverse().ToArray();
                 for (int j = 0; j < 64; j++)
+                {
                     if (tempBits[j] != false)
                         t = t ^ A[j];
-                byte[] resPart = BitConverter.GetBytes(t).Reverse().ToArray();
-                Array.Copy(resPart, 0, result, i * 8, 8);
+                }
+                byte[] ResPart = BitConverter.GetBytes(t).Reverse().ToArray();
+                Array.Copy(ResPart, 0, result, i * 8, 8);
             }
             return result;
         }
@@ -295,6 +297,8 @@ namespace GOST_Stribog
             byte[] mesLen = BitConverter.GetBytes(message1.Length * 8);
             N=Modulo512(N, mesLen.Reverse().ToArray());
             Sigma = Modulo512(Sigma, paddedMes);
+            h = G_n(N_0, h, N);
+            h = G_n(N_0, h, Sigma);
             if (outLen == 512)
                 return h;
             else
