@@ -240,5 +240,69 @@ namespace GOST_Stribog
             byte[] newh = Xor(t, m);
             return newh;
         }
+        public byte[] GetHash(byte[] message)
+        {
+            byte[] paddedMes = new byte[64];
+            int len = message.Length * 8;
+            byte[] h = new byte[64];
+            Array.Copy(iv, h, 64);
+            byte[] N_0 ={
+            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+            };
+            if (outLen == 512)
+            {
+                for (int i = 0; i < 64; i++)
+                {
+                    N[i] = 0x00;
+                    Sigma[i] = 0x00;
+                    iv[i] = 0x00;
+                }
+            }
+            else if (outLen == 256)
+            {
+                for (int i = 0; i < 64; i++)
+                {
+                    N[i] = 0x00;
+                    Sigma[i] = 0x00;
+                    iv[i] = 0x01;
+                }
+            }
+            byte[] N_512 = BitConverter.GetBytes(512);
+            int inc = 0;
+            while (len >= 512)
+            {
+                inc++;
+                byte[] tempMes = new byte[64];
+                Array.Copy(message, message.Length - inc * 64, tempMes, 0, 64);
+                h = G_n(N, h, tempMes);
+                N = Modulo512(N, N_512.Reverse().ToArray());
+                Sigma = Modulo512(Sigma, tempMes);
+                len -= 512;
+            }
+            byte[] message1 = new byte[message.Length - inc * 64];
+            Array.Copy(message, 0, message1, 0, message.Length - inc * 64);
+            if (message1.Length < 64)
+            {
+                for (int i = 0; i < (message1.Length - 1); i++)
+                    paddedMes[i] = 0;
+                paddedMes[64 - message1.Length - 1] = 0x01;
+                Array.Copy(message1, 0, paddedMes, 64 - message1.Length, message1.Length);
+            }
+            h=G_n(N, h, paddedMes);
+            byte[] mesLen = BitConverter.GetBytes(message1.Length * 8);
+            N=Modulo512(N, mesLen.Reverse().ToArray());
+            Sigma = Modulo512(Sigma, paddedMes);
+            if (outLen == 512)
+                return h;
+            else
+            {
+                byte[] h256 = new byte[32];
+                Array.Copy(h, 0, h256, 0, 32);
+                return h256;
+            }
+        }
     }
 }
