@@ -219,7 +219,7 @@ namespace GOST_Stribog
         private byte[] E(byte[] K, byte[] m)
         {
             byte[] state = Xor(K, m);
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 12; i++)
             {
                 state = S(state);
                 state = P(state);
