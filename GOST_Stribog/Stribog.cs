@@ -126,6 +126,28 @@
         private byte[] N = new byte[64];
         private byte[] Sigma = new byte[64];
         public int outLen = 0;
-
+        public Stribog(int outrutLenght)
+        {
+            if(outrutLenght == 512)
+            {
+                for(int i = 0; i < 64; i++)
+                {
+                    iv[i] = 0x00;
+                    N[i] = 0x00;
+                    Sigma[i] = 0x00;
+                }
+                outLen = 512;
+            }
+            if(outrutLenght == 256)
+            {
+                for (int i = 0; i < 64; i++)
+                {
+                    iv[i] = 0x01;
+                    N[i] = 0x00;
+                    Sigma[i] = 0x00;
+                }
+                outLen = 256;
+            }
+        }
     }
 }
