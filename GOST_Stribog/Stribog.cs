@@ -149,5 +149,12 @@
                 outLen = 256;
             }
         }
+        public byte[] Xor(byte[] a, byte[] b)
+        {
+            byte[] c = new byte[64];
+            for(int i = 0; i < 64; i++)
+                c[i] = (byte)(a[i] ^ b[i]);
+            return c;
+        }
     }
 }
