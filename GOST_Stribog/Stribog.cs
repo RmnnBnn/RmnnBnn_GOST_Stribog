@@ -1,4 +1,6 @@
-﻿namespace GOST_Stribog
+﻿using System.Collections;
+
+namespace GOST_Stribog
 {
     public class Stribog
     {
@@ -183,6 +185,27 @@
             byte[] result = new byte[64];
             for (int i = 0; i < 64; i++)
                 result[i] = state[Tau[i]];
+            return result;
+        }
+        private byte[] L(byte[] state)
+        {
+            byte[] result = new byte[64];
+            for (int i = 0; i < 64; i++)
+            {
+                ulong t = 0;
+                byte[] tempArray = new byte[8];
+                Array.Copy(state, i * 8, tempArray, 0, 8);
+                tempArray = tempArray.Reverse().ToArray();
+                BitArray tempBits1 = new BitArray(tempArray);
+                bool[] tempBits = new bool[64];
+                tempBits1.CopyTo(tempBits, 0);
+                tempBits = tempBits.Reverse().ToArray();
+                for (int j = 0; j < 64; j++)
+                    if (tempBits[j] != false)
+                        t = t ^ A[j];
+                byte[] resPart = BitConverter.GetBytes(t).Reverse().ToArray();
+                Array.Copy(resPart,0, result, i * 8, 8);
+            }
             return result;
         }
     }
