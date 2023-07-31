@@ -126,9 +126,9 @@
         private byte[] N = new byte[64];
         private byte[] Sigma = new byte[64];
         public int outLen = 0;
-        public Stribog(int outrutLenght)
+        public Stribog(int outputLenght)
         {
-            if (outrutLenght == 512)
+            if (outputLenght == 512)
             {
                 for (int i = 0; i < 64; i++)
                 {
@@ -138,7 +138,7 @@
                 }
                 outLen = 512;
             }
-            if (outrutLenght == 256)
+            if (outputLenght == 256)
             {
                 for (int i = 0; i < 64; i++)
                 {
