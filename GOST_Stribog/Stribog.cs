@@ -190,7 +190,7 @@ namespace GOST_Stribog
         private byte[] L(byte[] state)
         {
             byte[] result = new byte[64];
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 8; i++)
             {
                 ulong t = 0;
                 byte[] tempArray = new byte[8];
