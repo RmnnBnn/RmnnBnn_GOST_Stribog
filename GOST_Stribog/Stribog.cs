@@ -204,9 +204,17 @@ namespace GOST_Stribog
                     if (tempBits[j] != false)
                         t = t ^ A[j];
                 byte[] resPart = BitConverter.GetBytes(t).Reverse().ToArray();
-                Array.Copy(resPart,0, result, i * 8, 8);
+                Array.Copy(resPart, 0, result, i * 8, 8);
             }
             return result;
+        }
+        private byte[] KeySchedule(byte[] K, int i)
+        {
+            K = Xor(K, C[i]);
+            K = S(K);
+            K = P(K);
+            K = L(K);
+            return K;
         }
     }
 }
