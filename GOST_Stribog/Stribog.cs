@@ -158,7 +158,7 @@ namespace GOST_Stribog
                 c[i] = (byte)(a[i] ^ b[i]);
             return c;
         }
-        private byte[] Modulo512(byte[] a, byte[] b)
+        private byte[] Modulo(byte[] a, byte[] b)
         {
             byte[] temp = new byte[64];
             int i = 0, t = 0;
@@ -280,8 +280,8 @@ namespace GOST_Stribog
                 byte[] tempMes = new byte[64];
                 Array.Copy(message, message.Length - inc * 64, tempMes, 0, 64);
                 h = G_n(N, h, tempMes);
-                N = Modulo512(N, N_512.Reverse().ToArray());
-                Sigma = Modulo512(Sigma, tempMes);
+                N = Modulo(N, N_512.Reverse().ToArray());
+                Sigma = Modulo(Sigma, tempMes);
                 len -= 512;
             }
             byte[] message1 = new byte[message.Length - inc * 64];
@@ -295,8 +295,8 @@ namespace GOST_Stribog
             }
             h=G_n(N, h, paddedMes);
             byte[] mesLen = BitConverter.GetBytes(message1.Length * 8);
-            N=Modulo512(N, mesLen.Reverse().ToArray());
-            Sigma = Modulo512(Sigma, paddedMes);
+            N=Modulo(N, mesLen.Reverse().ToArray());
+            Sigma = Modulo(Sigma, paddedMes);
             h = G_n(N_0, h, N);
             h = G_n(N_0, h, Sigma);
             if (outLen == 512)
